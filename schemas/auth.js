@@ -11,6 +11,13 @@ const registerSchema = Joi.object({
   }),
 })
 
+const emailSchema = Joi.object({
+   email: Joi.string().pattern(emailRegexp).required().messages({
+    "any.required": "Missing required email field",
+    }),
+})
+
 module.exports = {
-    registerSchema,
+  registerSchema,
+  emailSchema,
 }
