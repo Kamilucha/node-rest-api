@@ -10,30 +10,34 @@ apikey.apiKey = ELASTIC_API_KEY;
 
 const api = new ElasticEmail.EmailsApi();
 
-const sendEmail = ElasticEmail.EmailMessageData.constructFromObject({
-  Recipients: [
-    new ElasticEmail.EmailRecipient("lafic23473@viperace.com")
-  ],
-  Content: {
-    Body: [
-      ElasticEmail.BodyPart.constructFromObject({
-        ContentType: "HTML",
-        Content: "<strong>Test email</strong>"
-      })
-    ],
-    Subject: "Test email",
-    From: EMAIL_FROM
-  }
-});
- 
-const callback = function(error, data, response) {
-  if (error) {
-    console.error(error.message);
-  } else {
-    console.log('API called successfully.');
-  }
-};
+const sendEmailWrapper = ({to:email, subject}) => {
 
-api.emailsPost(sendEmail, callback);
+    const sendEmail = ElasticEmail.EmailMessageData.constructFromObject({
+      Recipients: [
+        new ElasticEmail.EmailRecipient(email)
+      ],
+      Content: {
+        Body: [
+          ElasticEmail.BodyPart.constructFromObject({
+            ContentType: "HTML",
+            Content: "<strong>Test email</strong>"
+          })
+        ],
+        Subject: subject ?? "Test email",
+        From: EMAIL_FROM
+      }
+    });
+     
+    const callback = function(error, data, response) {
+      if (error) {
+        console.error(error.message);
+      } else {
+        console.log('API called successfully.');
+      }
+    };
+    
+    api.emailsPost(sendEmail, callback);
+}
 
-module.exports = sendEmail;
+
+module.exports = {sendEmail: sendEmailWrapper};
