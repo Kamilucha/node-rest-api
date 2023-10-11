@@ -29,9 +29,9 @@ const register = async (req, res) => {
 
     const newUser = await User.create({ ...req.body, password: hashPassword, avatarURL, verificationToken });
     const verifyEmail = {
-    to: email,
-    subject: "Verify email!",
-    html: `<a target="_blank" href="${BASE_URL}/api/users/verify/${verificationToken}">Click to verify email</a>`,
+        to: email,
+        subject: "Verify email!",
+        html: `<a target="_blank" href="${BASE_URL}/api/users/verify/${verificationToken}">Click to verify email</a>`,
     }
     
     await sendEmail(verifyEmail);
@@ -46,7 +46,8 @@ const register = async (req, res) => {
 
 const verifyEmail = async (req, res) => {
     const { verificationToken } = req.params;
-    const user = await User.findOne(verificationToken);
+
+    const user = await User.findOne({ verificationToken });
 
      if (!user) {
         throw HttpError(404, "User not found") 
@@ -72,9 +73,9 @@ const resendVerifyEmail = async (req, res) => {
     }
 
      const verifyEmail = {
-    to: email,
-    subject: "Verify email!",
-    html: `<a target="_blank" href="${BASE_URL}/api/users/verify/${user.verificationToken}">Click to verify email</a>`,
+        to: email,
+        subject: "Verify email!",
+        html: `<a target="_blank" href="${BASE_URL}/api/users/verify/${user.verificationToken}">Click to verify email</a>`,
      }
     
     await sendEmail(verifyEmail);
